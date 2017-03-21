@@ -11,12 +11,15 @@ public class Card {
 	private String value; //face card int or char
 	
 	//constructor
-	//TODO : add a check to make sure value and suit are viable,
-	//or a create deck class will take care of that?
 	public Card (String suit, String value)
 	{
 		this.suit=suit;
 		this.value=value;
+	}
+	//empty constructor
+	public Card ()
+	{
+		
 	}
 	
 	//get methods
@@ -42,6 +45,6 @@ public class Card {
 	//toString method
 	public String toString()
 	{
-		return value + suit; 
+		return value + " " + suit; 
 	}	
 }
