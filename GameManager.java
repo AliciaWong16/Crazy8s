@@ -11,13 +11,14 @@ public class GameManager {
 	private Player player; 
 	private ComputerPlayer[] compPlayer; 
 	private Deck deck;
+	private static int turn; //to track whose turn it is : 0 for player , 1,2,3 for compPlayers
 	
 	//constructor
 	public GameManager()
 	{
 		player = new Player();
 		deck = new Deck();
-		
+		turn =0;
 		//will this work to initialize array? MUST TEST
 		compPlayer = new ComputerPlayer[] {new ComputerPlayer(),
 					new ComputerPlayer(), new ComputerPlayer()};
@@ -35,7 +36,7 @@ public class GameManager {
 		}	
 	}
 	
-	//IS PLAY LEGAL : checks for same card suit, same value, OR if it's an eight.
+	//IS PLAY LEGAL : checks for same card suit, same value, OR if it's an eight. returns true if play is legal
 	public boolean isPlayLegal(Card c)
 	{
 		//always playable if card is an 8
@@ -46,6 +47,50 @@ public class GameManager {
 			return true;
 		else 
 			return false;
+	}
+	
+	//play class TODO: make 8's, 2's and jacks special cards
+	//NOTE: boolean p should be always set to false when calling class from main method, unless the player chooses to play the card they just withdrew
+	public boolean play (int index, boolean p) //takes in card index (from hand - "-1" will be withdraw for now)
+	{
+		//I think this will have to change when we start writing the main method. 
+		Player thisPlayer; //should make shallow copy
+		if (turn/4 == 0)
+			thisPlayer = player;
+		else if (turn/4 ==1)
+			thisPlayer = compPlayer[0];
+		else if (turn/4 ==2) 
+			thisPlayer = compPlayer[1];
+		else
+			thisPlayer = compPlayer[2];
+		
+		//if playing card that was just withdrawn
+		if (p && isPlayLegal(thisPlayer.getHand().get(thisPlayer.getHand().size()-1)))
+		{
+			deck.addToDiscard(thisPlayer.playCard(thisPlayer.getHand().size()-1)); //plays last card picked up
+			return true;
+		}		
+		// if card index does not exist in player's hand (or not withdrawing), return false
+		else if (index<-1 || index > thisPlayer.getHand().size())
+			return false;
+		
+		else if(index==-1) //if player wants to withdraw
+		{
+			//if draw pile is empty, moves discard pile into draw pile(except card 0 of discard)
+			if(deck.isDrawPileEmpty());
+			{
+				deck.moveDiscard();
+			}
+			thisPlayer.addToHand(deck.withdraw()); 
+			return true;
+		}
+		else if (isPlayLegal(thisPlayer.getHand().get(index))) //if playing a card
+		{
+			deck.addToDiscard(thisPlayer.playCard(index));//take card from player, give to discard(add to top of discard);
+			turn++; //goes to next player's turn. This could be updated in main method loop instead (with a method to incrementTurn)
+			return true;
+		}
+		return false;
 	}
 	
 	//toString method 
