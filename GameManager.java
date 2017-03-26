@@ -1,10 +1,3 @@
-/*
- * game manager class. aggregates all other classes. 
- * this is the class to be called from the main method.
- * Heather Brunell March 22 2017
- */
-
-
 public class GameManager {
 
 	//attributes
@@ -19,8 +12,8 @@ public class GameManager {
 		player = new Player(n);
 		deck = new Deck();
 		//will this work to initialize array? MUST TEST
-		compPlayer = new ComputerPlayer[] {new ComputerPlayer(),
-					new ComputerPlayer(), new ComputerPlayer()};
+		compPlayer = new ComputerPlayer[] {new ComputerPlayer("cp1"),
+					new ComputerPlayer("cp2"), new ComputerPlayer("cp3")};
 	}
 	//get methods
 	public String getOSuit()
@@ -106,7 +99,72 @@ public class GameManager {
 		}
 		return false;
 	}
-	
+	public int compDecide(ComputerPlayer p, ComputerPlayer next){
+		int chosen = -1;//index of chosen card
+		boolean picked = false;
+		if(next.getHand().size()<= 5){
+			for(int i = 0; i<p.getHand().size() & !picked; i++){
+				if(p.getHand().get(i).getValue().equals("2")){
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		if(!picked){
+			for(int i = 0; i<p.getHand().size() & !picked; i++){//play card that matches deck
+				if(p.getHand().get(i).getValue().equals(deck.getTopDiscard().getValue())||
+					p.getHand().get(i).getSuit().equals(deck.getTopDiscard().getSuit()) &&
+					!p.getHand().get(i).getValue().equals("8")){
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		if(!picked){//play jack
+			for(int i = 0; i<p.getHand().size() & !picked; i++){//play jack if held
+				if(p.getHand().get(i).getValue().equals("J")){
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		if(!picked){//play 8
+			for(int i = 0; i<p.getHand().size() & !picked; i++){//play 8 as last resort
+				if(p.getHand().get(i).getValue().equals("8")){
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		return chosen;
+	}
+	public String pickSuit(Player p){//class for picking suit once 8 is played
+		int clubs = 0,hearts = 0,diamonds = 0,spades = 0;
+		for(int i = 0; i<p.getHand().size(); i++){//count total number of cards in
+			if(p.getHand().get(i).getSuit().equals("C")){
+				clubs++;
+			}
+			else if(p.getHand().get(i).getSuit().equals("H")){
+				hearts++;
+			}
+			else if(p.getHand().get(i).getSuit().equals("D")){
+				diamonds++;
+			}
+			else{//card is spade
+				spades++;
+			}
+		}
+		String suit;//variable for suit to choose
+		if(clubs >= spades && clubs >= diamonds && clubs >= hearts)//hand has most clubs
+			suit = "C";
+		else if(spades >= clubs && spades >= diamonds && spades >= hearts)//hand has most spades
+			suit = "S";
+		else if(diamonds >= spades && diamonds >= clubs && diamonds >= hearts)//hand has most diamonds
+			suit = "D";
+		else//most of own cards are hearts
+			suit = "H";
+		return suit;
+	}
 	//toString method 
 	public String toString()
 	{
