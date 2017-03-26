@@ -21,8 +21,7 @@ public class Deck {
 		populateDeck(); //populates fullDeck
 		discard = new ArrayList<Card>();
 		drawPile = new ArrayList<Card>();
-		drawPile = fullDeck; // this is a hard copy, right?
-
+		drawPile = fullDeck; //hardcopy of deck
 	}
 	
 	//withdraw random card from drawPile & delete) 
@@ -40,15 +39,8 @@ public class Deck {
 	{
 		discard.add(0, c);
 	}
-
-	//return top card (REDUNDANT NOW I THINK)
-	//pass card array by using get method in this class
-	public Card getTopCard(ArrayList<Card> c)
-	{
-		return c.get(0); //assuming first index is top card.
-	}
 	
-	//is pile empty (drawPile)
+	//is pile empty (drawPile) : returns true is empty
 	public boolean isDrawPileEmpty()
 	{
 		if (drawPile.isEmpty())
@@ -58,7 +50,7 @@ public class Deck {
 	}
 	
 	//get methods - gets whole piles 
-	public ArrayList<Card> gDrawPile()
+	public ArrayList<Card> getDrawPile()
 	{
 		return drawPile;
 	}
@@ -100,8 +92,7 @@ public class Deck {
 			fullDeck.add(new Card (suit, "10"));
 			fullDeck.add(new Card (suit, "J"));
 			fullDeck.add(new Card (suit, "Q"));
-			fullDeck.add(new Card (suit, "K"));	
-				
+			fullDeck.add(new Card (suit, "K"));		
 		}		
 	}
 	
@@ -125,6 +116,4 @@ public class Deck {
 		int num = r.nextInt(drawPile.size());
 		return num;
 	}
-	
-	
 }

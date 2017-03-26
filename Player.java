@@ -4,13 +4,20 @@
 
 import java.util.ArrayList;
 public class Player {
+	//attributes
 	private String name;
 	private ArrayList<Card> hand;
 	
+	//constructors
+	public Player(String n) {
+		hand = new ArrayList<Card>();
+		name=n;
+	}
 	public Player() {
 		hand = new ArrayList<Card>();
 	}
 	
+	//get/set
 	public String getName() {
 		return name;
 	}

@@ -14,14 +14,31 @@ public class GameManager {
 	private static int turn; //to track whose turn it is : 0 for player , 1,2,3 for compPlayers
 	
 	//constructor
-	public GameManager()
+	public GameManager(String n)
 	{
-		player = new Player();
+		player = new Player(n);
 		deck = new Deck();
 		turn =0;
 		//will this work to initialize array? MUST TEST
 		compPlayer = new ComputerPlayer[] {new ComputerPlayer(),
 					new ComputerPlayer(), new ComputerPlayer()};
+	}
+	//get methods
+	public Player getPlayer()
+	{
+		return player;
+	}
+	public ComputerPlayer getCompPlayer(int index)
+	{
+		return compPlayer[index]; //return entire array of players
+	}
+	public Deck getDeck()
+	{
+		return deck;
+	}
+	public static int getTurn()
+	{
+		return turn;
 	}
 	
 	//deal cards (withdraws 8) - only use in beginning of game
@@ -68,6 +85,7 @@ public class GameManager {
 		if (p && isPlayLegal(thisPlayer.getHand().get(thisPlayer.getHand().size()-1)))
 		{
 			deck.addToDiscard(thisPlayer.playCard(thisPlayer.getHand().size()-1)); //plays last card picked up
+			turn++;
 			return true;
 		}		
 		// if card index does not exist in player's hand (or not withdrawing), return false
