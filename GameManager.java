@@ -12,6 +12,7 @@ public class GameManager {
 	private ComputerPlayer[] compPlayer; 
 	private Deck deck;
 	private static int turn; //to track whose turn it is : 0 for player , 1,2,3 for compPlayers
+	private String oSuit; //for 8 to override suit
 	
 	//constructor
 	public GameManager(String n)
@@ -24,6 +25,10 @@ public class GameManager {
 					new ComputerPlayer(), new ComputerPlayer()};
 	}
 	//get methods
+	public String getOSuit()
+	{
+		return oSuit;
+	}
 	public Player getPlayer()
 	{
 		return player;
@@ -39,6 +44,11 @@ public class GameManager {
 	public static int getTurn()
 	{
 		return turn;
+	}
+	//set
+	public void setOSuit(String s)
+	{
+		oSuit=s;
 	}
 	
 	//deal cards (withdraws 8) - only use in beginning of game
@@ -61,7 +71,7 @@ public class GameManager {
 		if (c.getValue().equals("8"))
 			return true;
 		//playable is suits or values of played card match top card (of discard pile)
-		else if (c.getSuit().equals(deck.getTopDiscard().getSuit()) || c.getValue().equals(deck.getTopDiscard().getSuit()))
+		else if (c.getSuit().equals(oSuit) || c.getValue().equals(deck.getTopDiscard().getValue()))
 			return true;
 		else 
 			return false;

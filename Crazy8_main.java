@@ -15,9 +15,9 @@ public class Crazy8_main {
 		GameManager crazy = new GameManager(kb.next());
 		crazy.dealCards();
 	
-		int turn=1; //player gets to go first TODO : update after play
+		int turn=1; //player gets to go first 
 		boolean winner =false; //TODO : update when winner
-		
+		int two=0;
 		
 		//prints player cards and top display card
 		System.out.println("Top of discard pile: " + crazy.getDeck().getTopDiscard());
@@ -26,8 +26,30 @@ public class Crazy8_main {
 		//while no winner (all players have more than 0 cards
 		while (!winner)
 		{			
-			if (turn==1)//if it's player's turn
+		//	if (turn==1)//if it's player's turn
 			{
+				//withdraws twos
+				if (two==1)
+				{
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw()); //withdraw 1 card
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw());
+				}
+				else if (two==2)
+				{
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw()); //withdraw 1 card
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw());
+				}
+				else if (two==3)
+				{
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw()); //withdraw 1 card
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw());
+				}
+				else if (two==4)
+				{
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw()); //withdraw 1 card
+					crazy.getPlayer().addToHand(crazy.getDeck().withdraw());
+				}
+					
 				System.out.print("Pick a card to play (index, or -1 to withdraw): ");
 				int index = kb.nextInt();
 				crazy.play(index, false);
@@ -50,17 +72,42 @@ public class Crazy8_main {
 				//prints player cards and top display card
 				System.out.println("Top of discard pile: " + crazy.getDeck().getTopDiscard());
 				System.out.println("\nYour cards: " + crazy.getPlayer().getHand().toString());
-				turn++; //TODO : check for jacks (SAMARA's code!!)
+				
+				//8 update suit
+				if (crazy.getDeck().getTopDiscard().getValue().equals("8"))
+				{
+					System.out.println("Which suit do you want to change it to?");
+					crazy.setOSuit(kb.next());
+				}
+				else
+					crazy.setOSuit(crazy.getDeck().getTopDiscard().getSuit());
+				
+				//TODO : test if jack
+				if (crazy.getDeck().getTopDiscard().getValue().equals("J"))
+					turn=3;
+				else
+					turn=2;
+				//two's update
+				if(crazy.getDeck().getTopDiscard().getValue().equals("2"))
+						two++;
+				else
+					two=0;
+				//checks if player won
+				if (crazy.getPlayer().isWinner())
+				{
+					winner=true;
+					System.out.println("Congratulations, " + crazy.getPlayer().getName() + " you won!!");
+				}
 			} 
-			else if (turn ==2 && !winner) //first computer player
+		//	else if (turn ==2 && !winner) //first computer player
 			{
 				
 			}
-			else if (turn ==3 && !winner) //second computer player
+	//		else if (turn ==3 && !winner) //second computer player
 			{
 				
 			}
-			else if (turn ==4 && !winner) //third computer player
+	//		else if (turn ==4 && !winner) //third computer player
 			{
 				
 			}
