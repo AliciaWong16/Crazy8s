@@ -53,6 +53,12 @@ public class Crazy8_main {
 				System.out.print("Pick a card to play (index, or -1 to withdraw): ");
 				int index = kb.nextInt();
 				crazy.play(index, false, crazy.getPlayer());
+				while(!crazy.isPlayLegal(crazy.getPlayer().getHand().get(index)))
+				{
+					System.out.print("That move is invalid. Pick a card to play (index, or -1 to witdraw): ");
+					index=kb.nextInt();
+					crazy.play(index, false, crazy.getPlayer());
+				}
 				
 				if (index==-1) //if player withdrawing	
 				{
