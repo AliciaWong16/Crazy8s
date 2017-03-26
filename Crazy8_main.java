@@ -52,7 +52,7 @@ public class Crazy8_main {
 					
 				System.out.print("Pick a card to play (index, or -1 to withdraw): ");
 				int index = kb.nextInt();
-				crazy.play(index, false);
+				crazy.play(index, false, crazy.getPlayer());
 				
 				if (index==-1) //if player withdrawing	
 				{
@@ -65,7 +65,7 @@ public class Crazy8_main {
 						String playW = kb.next();
 						if (playW.equals("Y"))
 						{
-							crazy.play(-1, true); //would this still be -1? I think think the int is used this time. 
+							crazy.play(-1, true, crazy.getPlayer()); //would this still be -1? I think think the int is used this time. 
 						}
 					}
 				}
