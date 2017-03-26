@@ -77,20 +77,20 @@ public class GameManager {
 			return false;
 	}
 	
-	//play class TODO: make 8's, 2's and jacks special cards
+	//play class
 	//NOTE: boolean p should be always set to false when calling class from main method, unless the player chooses to play the card they just withdrew
-	public boolean play (int index, boolean p) //takes in card index (from hand - "-1" will be withdraw for now)
+	public boolean play (int index, boolean b, Player p) //takes in card index (from hand - "-1" will be withdraw for now)
 	{
 
 		//if playing card that was just withdrawn
-		if (p && isPlayLegal(player.getHand().get(player.getHand().size()-1)))
+		if (b && isPlayLegal(p.getHand().get(p.getHand().size()-1)))
 		{
-			deck.addToDiscard(player.playCard(player.getHand().size()-1)); //plays last card picked up
+			deck.addToDiscard(p.playCard(p.getHand().size()-1)); //plays last card picked up
 			turn++;
 			return true;
 		}		
 		// if card index does not exist in player's hand (or not withdrawing), return false - play not valid
-		else if (index<-1 && index > player.getHand().size())
+		else if (index<-1 && index > p.getHand().size())
 		{
 			System.out.println("You can't play that card!");
 			return false;
@@ -102,12 +102,12 @@ public class GameManager {
 			{
 				deck.moveDiscard();
 			}
-			player.addToHand(deck.withdraw()); 
+			p.addToHand(deck.withdraw()); 
 			return true;
 		}
-		else if (isPlayLegal(player.getHand().get(index))) //if playing a card
+		else if (isPlayLegal(p.getHand().get(index))) //if playing a card
 		{
-			deck.addToDiscard(player.playCard(index));//take card from player, give to discard(add to top of discard);
+			deck.addToDiscard(p.playCard(index));//take card from player, give to discard(add to top of discard);
 			turn++; //goes to next player's turn. This could be updated in main method loop instead (with a method to incrementTurn)
 			return true;
 		}
