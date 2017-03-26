@@ -8,53 +8,64 @@ public class Crazy8_main {
 
 	public static void main(String[]args)
 	{
-	
-		//TODO : create deck, player (ask name), computer players. Should we have a "game manager" class?
-		//turns 
-		
+		//TODO : print rules option?	
 		
 		Scanner kb = new Scanner(System.in);
 		System.out.print("Please enter your name: ");
 		GameManager crazy = new GameManager(kb.next());
-		int turn=0;
+		crazy.dealCards();
+	
+		int turn=1; //player gets to go first TODO : update after play
+		boolean winner =false; //TODO : update when winner
+		
+		
+		//prints player cards and top display card
+		System.out.println("Top of discard pile: " + crazy.getDeck().getTopDiscard());
+		System.out.println("\nYour cards: " + crazy.getPlayer().getHand().toString());
 		
 		//while no winner (all players have more than 0 cards
-		while (crazy.getPlayer().getHand().size()<1 || crazy.getCompPlayer(0).getHand().size() < 1 || crazy.getCompPlayer(1).getHand().size() < 1 || crazy.getCompPlayer(2).getHand().size() < 1)
-		{
-			//TODO: print player cards
-			if (turn%4==0)//if it's player's turn
+		while (!winner)
+		{			
+			if (turn==1)//if it's player's turn
 			{
 				System.out.print("Pick a card to play (index, or -1 to withdraw): ");
 				int index = kb.nextInt();
 				crazy.play(index, false);
-				if (index==-1)
+				
+				if (index==-1) //if player withdrawing	
 				{
-					//TODO - check if card can be played
-					crazy.getPlayer().getHand().get(index);
-					System.out.print("Do you want to play the card you just withdrew? (Y/N)");
-					String playW = kb.next();
-					
+					System.out.println("You withdrew a " + crazy.getPlayer().getHand().get(crazy.getPlayer().getHand().size()-1));
+					if (crazy.isPlayLegal(crazy.getPlayer().getHand().get((crazy.getPlayer().getHand().size()-1))))// checks if withdrawn card can be played
+					{
+						System.out.println("Top of discard pile: " + crazy.getDeck().getTopDiscard());
+						System.out.println("\nYour cards: " + crazy.getPlayer().getHand().toString());
+						System.out.print("Do you want to play the card you just withdrew? (Y/N)");
+						String playW = kb.next();
+						if (playW.equals("Y"))
+						{
+							crazy.play(-1, true); //would this still be -1? I think think the int is used this time. 
+						}
+					}
 				}
+				//prints player cards and top display card
+				System.out.println("Top of discard pile: " + crazy.getDeck().getTopDiscard());
+				System.out.println("\nYour cards: " + crazy.getPlayer().getHand().toString());
+				turn++; //TODO : check for jacks (SAMARA's code!!)
 			} 
+			else if (turn ==2 && !winner) //first computer player
+			{
+				
+			}
+			else if (turn ==3 && !winner) //second computer player
+			{
+				
+			}
+			else if (turn ==4 && !winner) //third computer player
+			{
+				
+			}
+				
 			//for computer player, inputs next player's card number as int (cardCount)
-		}
-		
-		//TODO : print rules
-		
-	/*	Deck deck = new Deck(); //deck is called deck
-		
-		//creates player
-		Player player = new Player();
-		player.setName(kb.next());
-		
-		ComputerPlayer cp1 = new ComputerPlayer();
-		ComputerPlayer cp2 = new ComputerPlayer();
-		ComputerPlayer cp3 = new ComputerPlayer(); */
-		
-		//TODO: loop for plays; count to track whose turn it is. 1- check if winner. 2 - 
-	
-	
-	
-	
+		}	
 	}	
 }
