@@ -11,7 +11,6 @@ public class GameManager {
 	private Player player; 
 	private ComputerPlayer[] compPlayer; 
 	private Deck deck;
-	private static int turn; //to track whose turn it is : 0 for player , 1,2,3 for compPlayers
 	private String oSuit; //for 8 to override suit
 	
 	//constructor
@@ -19,7 +18,6 @@ public class GameManager {
 	{
 		player = new Player(n);
 		deck = new Deck();
-		turn =0;
 		//will this work to initialize array? MUST TEST
 		compPlayer = new ComputerPlayer[] {new ComputerPlayer(),
 					new ComputerPlayer(), new ComputerPlayer()};
@@ -41,10 +39,7 @@ public class GameManager {
 	{
 		return deck;
 	}
-	public static int getTurn()
-	{
-		return turn;
-	}
+
 	//set
 	public void setOSuit(String s)
 	{
@@ -86,7 +81,6 @@ public class GameManager {
 		if (b && isPlayLegal(p.getHand().get(p.getHand().size()-1)))
 		{
 			deck.addToDiscard(p.playCard(p.getHand().size()-1)); //plays last card picked up
-			turn++;
 			return true;
 		}		
 		// if card index does not exist in player's hand (or not withdrawing), return false - play not valid
@@ -108,7 +102,6 @@ public class GameManager {
 		else if (isPlayLegal(p.getHand().get(index))) //if playing a card
 		{
 			deck.addToDiscard(p.playCard(index));//take card from player, give to discard(add to top of discard);
-			turn++; //goes to next player's turn. This could be updated in main method loop instead (with a method to incrementTurn)
 			return true;
 		}
 		return false;
