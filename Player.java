@@ -57,6 +57,28 @@ public class Player {
 			return false;
 	}
 	
+	//get cards in hand (returns array) - creating this to display number of cards each computer player has in hand
+	//(in game manager toString method) - HB
+	public ArrayList<Card> getHand()
+	{
+		return hand;
+	}
+	
+	//add to hand (withdraw) - HB
+	public void addToHand(Card c)
+	{
+		hand.add(c);
+	}
+	
+	//checks if there is a winner - HB
+	public boolean isWinner()
+	{
+		if (hand.isEmpty())
+			return true;
+		else
+			return false;
+	}
+	
 	public String toString() {
 		return name + "'s cards: " + hand.toString();
 				
