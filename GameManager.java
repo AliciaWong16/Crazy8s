@@ -1,8 +1,3 @@
-/*
- * game manager class. aggregates all other classes. 
- * this is the class to be called from the main method.
- * Heather Brunell March 22 2017
- */
 
 
 public class GameManager {
@@ -108,7 +103,7 @@ public class GameManager {
 	}
 	
 	//computer picking card, returns index of their hand of hards
-	public int compDecide(ComputerPlayer p, ComputerPlayer next)
+	public int compDecide(ComputerPlayer p, Player next)
 	{
 		int chosen = -1;//index of chosen card
 		boolean picked = false; //true when picked a card??
@@ -130,7 +125,21 @@ public class GameManager {
 			for(int i = 0; i<p.getHand().size() & !picked; i++){
 				if(p.getHand().get(i).getValue().equals(deck.getTopDiscard().getValue())||
 					p.getHand().get(i).getSuit().equals(oSuit) &&
-					!p.getHand().get(i).getValue().equals("8"))
+					!p.getHand().get(i).getValue().equals("8") &&
+					!p.getHand().get(i).getValue().equals("J") &&
+					!p.getHand().get(i).getValue().equals("2"))
+				{
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		//play 2
+		if(!picked)
+		{	//play 2 if held
+			for(int i = 0; i<p.getHand().size() & !picked; i++)
+			{
+				if(p.getHand().get(i).getValue().equals("2"))
 				{
 					chosen = i;
 					picked = true;
@@ -159,9 +168,8 @@ public class GameManager {
 			}
 		}
 		//withdraws if cannot play a card
-		if(!picked)
-			chosen=-1;
-		
+		//if(!picked)
+			//chosen=-1;
 		return chosen;
 	}
 	//class for computer player to pick a suit once 8 is played
@@ -200,9 +208,6 @@ public class GameManager {
 			suit = "H";
 		return suit; //returns String (chosen suit)
 	}
-	
-	
-	
 	//toString method 
 	public String toString()
 	{

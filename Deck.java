@@ -1,8 +1,3 @@
-/*
- * deck object. aggregated to player (player has a deck)
- * assumes top card of discard is 0 index. (discarded cards are added to front of array list)
- * Heather Brunell Mar 21 2017
- */
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,17 +17,11 @@ public class Deck {
 		discard = new ArrayList<Card>();
 		drawPile = new ArrayList<Card>();
 		drawPile = fullDeck; //hardcopy of deck
-		
 	}
 	
-	//withdraw random card from drawPile
+	//withdraw random card from drawPile & delete) 
 	public Card withdraw()
 	{
-	/*	if (isDrawPileEmpty());
-		{
-			System.out.println("The draw pile ran out! The discard pile has been added to the draw pile.");
-			moveDiscard();
-		} */
 		int index = random(); //index of card to withdraw from pile
 		Card temp = new Card(); //requires the new empty constructor
 		temp = drawPile.get(index); //duplicates card to withdraw

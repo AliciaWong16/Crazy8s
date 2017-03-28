@@ -1,8 +1,3 @@
-/*
- * card class for crazy 8's - aggregate into deck
- * Heather Brunell March 21 2017
- */
-
 
 public class Card {
 

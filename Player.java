@@ -1,7 +1,3 @@
-/*
- * Megan Brock March 21 2017
- */
-
 import java.util.ArrayList;
 public class Player {
 	//attributes
