@@ -50,7 +50,7 @@ public class Crazy8_main {
 				if(index != -1){
 					while(!crazy.isPlayLegal(crazy.getPlayer().getHand().get(index)))
 					{
-						System.out.print("That move is invalid. Pick a card to play (index, or -1 to witdraw): ");
+						System.out.print("That move is invalid. Pick a card to play (index, or -1 to withdraw): ");
 						index=kb.nextInt();
 						crazy.play(index, false, crazy.getPlayer());
 					}
@@ -102,51 +102,50 @@ public class Crazy8_main {
 			}
 			else if (turn ==2 && !winner) //first computer player
 			{
-			System.out.println("\ncp1 cards"+crazy.getCompPlayer(0).getHand());
-			int chosen = crazy.compDecide(crazy.getCompPlayer(0),crazy.getCompPlayer(1));
-			crazy.play(chosen,false,crazy.getCompPlayer(0));
-			if (chosen==-1) //if player withdrawing	
-			{
-				System.out.println("You withdrew a " + crazy.getCompPlayer(0).getHand().get(crazy.getCompPlayer(0).getHand().size()-1));
-				if (crazy.isPlayLegal(crazy.getCompPlayer(0).getHand().get((crazy.getCompPlayer(0).getHand().size()-1))))// checks if withdrawn card can be played
+				System.out.println("\ncp1 cards"+crazy.getCompPlayer(0).getHand());//TODO: FOR DEBUG
+				int chosen = crazy.compDecide(crazy.getCompPlayer(0),crazy.getCompPlayer(1));
+				crazy.play(chosen,false,crazy.getCompPlayer(0));
+				System.out.println(chosen);//TODO: FOR DEBUG
+				if (chosen==-1) //if player withdrawing	
 				{
-						crazy.play(-1, true,crazy.getCompPlayer(0)); //would this still be -1? I think think the int is used this time. 
+					System.out.println("CP1 withdrew a " + crazy.getCompPlayer(0).getHand().get(crazy.getCompPlayer(0).getHand().size()-1));//TODO: FOR DEBUG
+					if (crazy.isPlayLegal(crazy.getCompPlayer(0).getHand().get((crazy.getCompPlayer(0).getHand().size()-1))))// checks if withdrawn card can be played
+					{
+							crazy.play(-1, true,crazy.getCompPlayer(0)); //would this still be -1? I think think the int is used this time. 
+					}
+				}			
+				//8 update suit
+				if (crazy.getDeck().getTopDiscard().getValue().equals("8"))
+				{
+					crazy.setOSuit(crazy.pickSuit(crazy.getCompPlayer(0)));
 				}
-			}			
-			//8 update suit
-			if (crazy.getDeck().getTopDiscard().getValue().equals("8"))
-			{
-				crazy.setOSuit(crazy.pickSuit(crazy.getCompPlayer(0)));
+				else
+					crazy.setOSuit(crazy.getDeck().getTopDiscard().getSuit());
+				//TODO : test if jack
+				if (crazy.getDeck().getTopDiscard().getValue().equals("J"))
+					turn=1;//TODO:change back to 4
+				else
+					turn=1;//TODO: CHANGE BACK TO 3
+				//two's update
+				if(crazy.getDeck().getTopDiscard().getValue().equals("2"))
+						two++;
+				else
+					two=0;
+				if(chosen != -1){//TODO: ALWAYS PRINTS, EVEN WHEN CARD ISN'T PLAYER
+					System.out.println("CP1 has played a " + crazy.getDeck().getTopDiscard() + " card.");
+				}
+				System.out.println("CP1 has " + crazy.getCompPlayer(0).getHand().size() + " cards left.");
+				System.out.println("\nTop of discard pile: " + crazy.getDeck().getTopDiscard());
+				System.out.println("\ncp1 cards"+crazy.getCompPlayer(0).getHand());
+				System.out.println("done");
+				//checks if player won
+				if (crazy.getCompPlayer(0).isWinner())
+				{
+					winner=true;
+					System.out.println("Congratulations, " + crazy.getCompPlayer(0).getName() + " you won!!");
+					System.exit(0);
+				} 
 			}
-			else
-				crazy.setOSuit(crazy.getDeck().getTopDiscard().getSuit());
-			
-			//TODO : test if jack
-			if (crazy.getDeck().getTopDiscard().getValue().equals("J"))
-				turn=1;//TODO:change back to 4
-			else
-				turn=1;//TODO: CHANGE BACK TO 3
-			//two's update
-			if(crazy.getDeck().getTopDiscard().getValue().equals("2"))
-					two++;
-			else
-				two=0;
-			
-			if(chosen != -1){
-				System.out.println("CP1 has played a " + crazy.getDeck().getTopDiscard() + " card.");
-			}
-			System.out.println("CP1 has " + crazy.getCompPlayer(0).getHand().size() + " cards left.");
-			System.out.println("\nTop of discard pile: " + crazy.getDeck().getTopDiscard());
-			System.out.println("\ncp1 cards"+crazy.getCompPlayer(0).getHand());
-			System.out.println("done");
-			}
-			//checks if player won
-			if (crazy.getCompPlayer(0).isWinner())
-			{
-				winner=true;
-				System.out.println("Congratulations, " + crazy.getCompPlayer(0).getName() + " you won!!");
-				System.exit(0);
-			} 
 	//		else if (turn ==3 && !winner) //second computer player
 			{
 

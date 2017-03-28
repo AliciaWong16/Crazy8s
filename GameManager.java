@@ -111,10 +111,20 @@ public class GameManager {
 			}
 		}
 		if(!picked){
-			for(int i = 0; i<p.getHand().size() & !picked; i++){//play card that matches deck
+			for(int i = 0; i<p.getHand().size() & !picked; i++){//play card that matches deck(not jack/8/2)
 				if(p.getHand().get(i).getValue().equals(deck.getTopDiscard().getValue())||
 					p.getHand().get(i).getSuit().equals(deck.getTopDiscard().getSuit()) &&
-					!p.getHand().get(i).getValue().equals("8")){
+					!p.getHand().get(i).getValue().equals("8") &&
+					!p.getHand().get(i).getValue().equals("J") &&
+					!p.getHand().get(i).getValue().equals("2")){
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		if(!picked){//play 2
+			for(int i = 0; i<p.getHand().size() & !picked; i++){//play 2 if held
+				if(p.getHand().get(i).getValue().equals("2")){
 					chosen = i;
 					picked = true;
 				}
@@ -138,7 +148,7 @@ public class GameManager {
 		}
 		return chosen;
 	}
-	public String pickSuit(Player p){//class for picking suit once 8 is played
+	public String pickSuit(Player p){//class for picking suit once 8 is played (for comp player)
 		int clubs = 0,hearts = 0,diamonds = 0,spades = 0;
 		for(int i = 0; i<p.getHand().size(); i++){//count total number of cards in
 			if(p.getHand().get(i).getSuit().equals("C")){
