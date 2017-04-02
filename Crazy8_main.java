@@ -72,7 +72,7 @@ public class Crazy8_main {
 					while(!numbers){
 						System.out.print("Please enter a valid input (index of card or -1 to withdraw): ");
 						input = kb.next();
-						if(((input.equals("-1")))){
+						if(input.equals("-1")){
 							numbers = true;
 						}
 						else{
@@ -84,11 +84,11 @@ public class Crazy8_main {
 								}
 							}
 						}
-						if(numbers){
-							index = Integer.parseInt(input);
-						}
-					}		
-				}
+					}
+					if(numbers){
+						index = Integer.parseInt(input);
+					}
+			}
 				
 				//crazy.play(index, false, crazy.getPlayer());
 				if(index != -2){
