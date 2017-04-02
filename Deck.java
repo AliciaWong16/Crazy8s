@@ -22,11 +22,17 @@ public class Deck {
 		discard = new ArrayList<Card>();
 		drawPile = new ArrayList<Card>();
 		drawPile = fullDeck; //hardcopy of deck
+		
 	}
 	
-	//withdraw random card from drawPile & delete) 
+	//withdraw random card from drawPile
 	public Card withdraw()
 	{
+	/*	if (isDrawPileEmpty());
+		{
+			System.out.println("The draw pile ran out! The discard pile has been added to the draw pile.");
+			moveDiscard();
+		} */
 		int index = random(); //index of card to withdraw from pile
 		Card temp = new Card(); //requires the new empty constructor
 		temp = drawPile.get(index); //duplicates card to withdraw
