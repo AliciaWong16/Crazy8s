@@ -65,15 +65,15 @@ public class GameManager {
 		//always playable if card is an 8
 		if (c.getValue().equals("8"))
 			return true;
-		//playable is suits or values of played card match top card (of discard pile)
-		else if (c.getSuit().equals(oSuit) || c.getValue().equals(deck.getTopDiscard().getValue()))
+		//playable is suits or values of played card match top card (of discard pile) TODO change back to osuit
+		else if (c.getSuit().equals(deck.getTopDiscard().getSuit()) || c.getValue().equals(deck.getTopDiscard().getValue()))
 			return true;
 		else 
 			return false;
 	}
 	
 	//play class
-	//NOTE: boolean p should be always set to false when calling class from main method, unless the player chooses to play the card they just withdrew
+	//NOTE: boolean b should be always set to false when calling class from main method, unless the player chooses to play the card they just withdrew
 	public boolean play (int index, boolean b, Player p) //takes in card index (from hand - "-1" will be withdraw for now)
 	{
 
@@ -106,6 +106,102 @@ public class GameManager {
 		}
 		return false;
 	}
+	
+	//computer picking card, returns index of their hand of hards
+	public int compDecide(ComputerPlayer p, Player next)
+	{
+		int chosen = -1;//index of chosen card
+		boolean picked = false; //true when picked a card??
+		//if next player has few cards, play a 2 if there is one
+		if(next.getHand().size()<= 5)
+		{
+			for(int i = 0; i < p.getHand().size() & !picked; i++)
+			{
+				if(p.getHand().get(i).getValue().equals("2"))
+				{
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		
+		//play card that matches top discard card and is not an 8
+		if(!picked){
+			for(int i = 0; i<p.getHand().size() & !picked; i++){
+				if(p.getHand().get(i).getValue().equals(deck.getTopDiscard().getValue())||
+					p.getHand().get(i).getSuit().equals(oSuit) &&
+					!p.getHand().get(i).getValue().equals("8"))
+				{
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		//play jack
+		if(!picked)
+		{	//play jack if held
+			for(int i = 0; i<p.getHand().size() & !picked; i++)
+			{
+				if(p.getHand().get(i).getValue().equals("J"))
+				{
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		//play 8 as last resort if no other cards to play
+		if(!picked){
+			for(int i = 0; i<p.getHand().size() & !picked; i++){
+				if(p.getHand().get(i).getValue().equals("8")){
+					chosen = i;
+					picked = true;
+				}
+			}
+		}
+		//withdraws if cannot play a card
+		if(!picked)
+			chosen=-1;
+		
+		return chosen;
+	}
+	//class for computer player to pick a suit once 8 is played
+	public String pickSuit(Player p)
+	{
+		int clubs = 0,hearts = 0,diamonds = 0,spades = 0;
+		//count total number of each suit in hand
+		for(int i = 0; i<p.getHand().size(); i++)
+		{
+			if(p.getHand().get(i).getSuit().equals("C"))
+			{
+				clubs++;
+			}
+			else if(p.getHand().get(i).getSuit().equals("H"))
+			{
+				hearts++;
+			}
+			else if(p.getHand().get(i).getSuit().equals("D"))
+			{
+				diamonds++;
+			}
+			else //card is spade
+			{
+				spades++;
+			}
+		}
+		//picks suit that has the higest number of hard in hand
+		String suit;//variable for suit to choose
+		if(clubs >= spades && clubs >= diamonds && clubs >= hearts)//hand has most clubs
+			suit = "C";
+		else if(spades >= clubs && spades >= diamonds && spades >= hearts)//hand has most spades
+			suit = "S";
+		else if(diamonds >= spades && diamonds >= clubs && diamonds >= hearts)//hand has most diamonds
+			suit = "D";
+		else//most of own cards are hearts
+			suit = "H";
+		return suit; //returns String (chosen suit)
+	}
+	
+	
 	
 	//toString method 
 	public String toString()

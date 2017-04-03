@@ -9,6 +9,7 @@ public class Card {
 	//attributes
 	private String suit;
 	private String value; //face card int or char
+	private String imgPath;
 	
 	//constructor
 	public Card (String suit, String value)
@@ -16,6 +17,14 @@ public class Card {
 		this.suit=suit;
 		this.value=value;
 	}
+	//NEW constructor -default used now in deck
+	public Card (String suit, String value, String img)
+	{
+		this.suit=suit;
+		this.value=value;
+		imgPath=img;
+	}
+	
 	//empty constructor
 	public Card ()
 	{
@@ -31,6 +40,11 @@ public class Card {
 	{
 		return value;
 	}
+	public String getImgPath()
+	{
+		return imgPath;
+	}
+	
 	
 	//set methods
 	public void setSuit(String suit)
@@ -40,6 +54,10 @@ public class Card {
 	public void setValue(String value)
 	{
 		this.value=value;
+	}
+	public void setImgPath(String path)
+	{
+		imgPath = path;
 	}
 	
 	//toString method
