@@ -34,18 +34,15 @@ import javafx.stage.Stage;
 public class newMain extends Application {
 
 	private GameManager gm; //game manager
-//	private ArrayList<Button> hand; //array of buttons for player's hand
-	private Button withdraw; //one button for withdraw pile (maybe 2 separate images for when pile has cards/no cards?)
-//	private ImageView discardTop; //top of discard pile image (set image after every card play) 
 	private String name; //player name
-	private Button reset;
+	private Button reset, withdraw, next; //reset to restart game, next to let computer players go
 	private BorderPane main;
 	private Stage prim;
 	private TextField userTextField;
-//	private ArrayList<Card> playerHand; //or do a player object?
 	private FlowPane flow;
 	private TilePane middle;
 	private Label userName;
+	private TilePane top;
 	
 	
     public static void main(String[] args) {
@@ -164,11 +161,6 @@ public class newMain extends Application {
 		    middle.setPadding(new Insets(5, 0, 5, 0));
 		    middle.setVgap(4);
 		    middle.setHgap(4);
-		   
-		/*    Image getDiscardTop = new Image(gm.getDeck().getTopDiscard().getImgPath()); // get image path from top of discard pile
-		    discardTop = new ImageView(getDiscardTop); //image view (displays image from path)
-		    discardTop.setFitWidth(100);
-		    discardTop.setPreserveRatio(true);*/
 		    
 		    //displays back of card image
 		    Image getBackOfCard = new Image ("file:///C:/Users/Heather/workspace/Assignment/graphics/backOfCard.png");//create file path to image
@@ -201,13 +193,16 @@ public class newMain extends Application {
 		    }
 		  			
 		  			//top part
-		    TilePane top = new TilePane();
+		    top = new TilePane();
 		    top.setAlignment(Pos.CENTER);
 			   top.setPadding(new Insets(5, 0, 5, 0));
 			   top.setVgap(4);
 			   top.setHgap(75);
 			    
 			 //add cp number of cards in hand
+			  next = new Button("Next Player Go"); //TODO add this button when player plays; remove when it's their turn
+			  next.setOnAction(this::computerPlayerTurn); //add turn count in gm
+			   
 			  Label cp1 = new Label("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards.");
 			  Label cp2 = new Label("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards.");
 			  Label cp3 = new Label("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards.");
@@ -220,14 +215,9 @@ public class newMain extends Application {
 		  main.setBottom(flow); //shows player's cards
 		  main.setCenter(middle); //create center pane (top card picture and withdraw pile)
 		  main.setTop(top); //shows number of cards in computer player's hands
-		//  Stage secondStage = new Stage();
 		  
 		  Scene mainGameScene = new Scene(main, 800,500); 
 		  prim.setScene(mainGameScene);
-	//	  secondStage.setScene(mainGameScene);
-	//	  secondStage.show();
-		//  primaryStage.setScene(mainGameScene);
-		  
 		  
 	}
 	//new withdraw method
@@ -266,8 +256,41 @@ public class newMain extends Application {
 		    	gm.getPlayer().getHand().get(i).getButton().setOnAction(this::processButtonPress);
 		    }
 		}
+		top.getChildren().add(0,next);
 	}
 
+	public void computerPlayerTurn(ActionEvent e)
+	{
+		int turn = gm.getTurn();
+		if (turn==1)
+		{
+			int chosen= gm.compDecide(gm.getCompPlayer(0),gm.getCompPlayer(1));
+			gm.play(chosen,false,gm.getCompPlayer(0));
+			gm.setTurn(2);
+			middle.getChildren().clear();
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+		}
+		else if (turn==2)
+		{
+			int chosen= gm.compDecide(gm.getCompPlayer(1),gm.getCompPlayer(2));
+			gm.play(chosen,false,gm.getCompPlayer(0));
+			gm.setTurn(3);
+			middle.getChildren().clear();
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+		}
+		else if (turn==3)
+		{
+			int chosen= gm.compDecide(gm.getCompPlayer(2),gm.getPlayer());
+			gm.play(chosen,false,gm.getCompPlayer(0));
+			gm.setTurn(1);
+			top.getChildren().remove(0);
+			middle.getChildren().clear();
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+		}
+		//TODO show when withdrawed card
+
+	}
+	
 }
 
 
