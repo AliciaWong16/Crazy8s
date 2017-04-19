@@ -1,8 +1,14 @@
-Win Count: 
-
-Todd has won 8 game(s).
-Frank has won 5 game(s).
-Bob has won 3 game(s).
-Josh has won 1 game(s).
-Patrick has won 0 game(s).
-Jean Pierre has won 0 game(s).
+Todd
+9
+Frank
+5
+Bob
+3
+Josh
+1
+GEORGE
+1
+Patrick
+0
+Jean Pierre
+0

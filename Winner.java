@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-//import java.util.StringTokenizer;
+
 public class Winner {
 	public static void main(String [] args) throws IOException{
 		File winners = new File("winners.txt");
@@ -11,10 +11,10 @@ public class Winner {
 		ArrayList<Integer>winsOrd = new ArrayList<Integer>();
 		Scanner win = new Scanner(winners);//new Scanner to read file
 		int gamesW = -1;
-		String name = "Todd";//TODO DELETE
+		String name = "GEORGE";//TODO DELETE
 		boolean won = true;//TODO DELETE
 		
-		for(int i = 0; win.hasNext(); i++){
+		while(win.hasNext()){
 			users.add(win.nextLine());
 			wins.add(Integer.parseInt((win.nextLine())));
 		}
@@ -63,9 +63,10 @@ public class Winner {
 		winOT.close();//close file
 		
 		PrintWriter winP = new PrintWriter("winnersP.txt");//create file
-		winP.println("Win Count: \n");
+		//winP.println("Win Count: \n");
 		for(int i = 0; i<usersOrd.size(); i++){
-			winP.println(usersOrd.get(i) + " has won " + winsOrd.get(i) + " game(s).");
+			winP.println(usersOrd.get(i));
+			winP.println(winsOrd.get(i));
 		}
 		winP.close();//close file
 	}
