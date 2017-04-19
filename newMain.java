@@ -36,6 +36,7 @@ public class newMain extends Application {
 	private String name; //player name
 	private Button reset, withdraw, next, yes, no; //reset to restart game, next to let computer players go
 	private Button hearts, clubs, diamonds, spades; //for changing suits
+//	private ImageView heartsI, clubsI, diamondsI, spadesI; //images for buttons to change suits (above)
 	private BorderPane main, win, lose;
 	private Stage prim, playWithdraw, SP;
 	private TextField userTextField;
@@ -54,14 +55,25 @@ public class newMain extends Application {
     @Override
     public void start(Stage primaryStage) 
     {
+    	//setup for later
+    //	heartsI = new ImageView(new Image("file:///C:/Users/Heather/Documents/School/Crazy%208/cards/icons/heart.jpg"));
+    	hearts = new Button(); clubs = new Button(); diamonds = new Button(); spades = new Button();
+    	hearts.setGraphic(new ImageView(new Image("file:///C:/Users/Heather/Documents/School/Crazy%208/cards/icons/heart.jpg")));
+    	clubs.setGraphic(new ImageView(new Image("file:///C:/Users/Heather/Documents/School/Crazy%208/cards/icons/club.jpg")));
+    	diamonds.setGraphic(new ImageView(new Image("file:///C:/Users/Heather/Documents/School/Crazy%208/cards/icons/diamond.jpg")));
+    	spades.setGraphic(new ImageView(new Image("file:///C:/Users/Heather/Documents/School/Crazy%208/cards/icons/spade.jpg")));
+    	
     	two=0;
     	s = new Label("");
+    	
     	win=new BorderPane();
     	Label winLabel = new Label("YOU WIN!!");
     	win.setCenter(winLabel);
     	lose=new BorderPane();
     	Label loseLabel= new Label("YOU LOSE");
     	lose.setCenter(loseLabel);
+    	
+    	//setup end
     	
     	prim = new Stage(); //??
     	prim.setTitle("Crazy Eights");
@@ -92,16 +104,14 @@ public class newMain extends Application {
         Scene scene = new Scene(grid, 600, 400);
         prim.setScene(scene);
         prim.show();
-  //      primaryStage.setScene(scene);
-  //      primaryStage.show();
         
         //this button doesn't do anything
-        Button btn = new Button("Start");
+        Label enter = new Label("Press Enter to Start");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_LEFT);
-        hbBtn.getChildren().add(btn);
+        hbBtn.getChildren().add(enter);
         grid.add(hbBtn, 1, 3);
-
+        
         Button btn2 = new Button("Rules");
         HBox hbBtn2 = new HBox(10);
         hbBtn2.setAlignment(Pos.BOTTOM_RIGHT);
@@ -158,79 +168,85 @@ public class newMain extends Application {
 	public void textField(ActionEvent event)
 	{
 		if (event.getSource()==userTextField)
-			 name = userTextField.getText(); //gets user input (name)
+		{
+			if (userTextField.getText().equals(""))
+				name = "ANONYMOUS";
+			else
+				 name = userTextField.getText(); //gets user input (name)
+		}
+
 		  gm = new GameManager(name); //creates game manager and deals cards
 		  gm.dealCards();
 		  gm.setOSuit(gm.getDeck().getTopDiscard().getSuit());
 		  
 		  //creates new view of screen
-	//	  BorderPane main = new BorderPane();
 		  main = new BorderPane();
 		  
 		  //middle part
-	//	  TilePane middle = new TilePane();
 		  middle=new TilePane();
 		  middle.setAlignment(Pos.CENTER);
-		    middle.setPadding(new Insets(5, 0, 5, 0));
-		    middle.setVgap(4);
-		    middle.setHgap(4);
+		  middle.setPadding(new Insets(5, 0, 5, 0));
+		  middle.setVgap(4);
+		  middle.setHgap(4);
 		    
-		    //displays back of card image
-		    Image getBackOfCard = new Image ("file:///C:/Users/Heather/workspace/Assignment/graphics/backOfCard.png");//create file path to image
-		    ImageView backOfCard = new ImageView(getBackOfCard); //displays image
-		    backOfCard.setFitWidth(100);
-		    backOfCard.setPreserveRatio(true);
-		    withdraw = new Button(); 
-		    withdraw.setOnAction(this::processButtonPress);
-		    withdraw.setGraphic(backOfCard); //sets button image
+		  //displays back of card image
+		  Image getBackOfCard = new Image ("file:///C:/Users/Heather/workspace/Assignment/graphics/backOfCard.png");//create file path to image
+		  ImageView backOfCard = new ImageView(getBackOfCard); //displays image
+		  backOfCard.setFitWidth(100);
+		  backOfCard.setPreserveRatio(true);
+		  withdraw = new Button(); 
+		  withdraw.setOnAction(this::processButtonPress);
+		  withdraw.setGraphic(backOfCard); //sets button image
 		    
-		    middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+		  middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw, s);
 		  
-		    //bottom part 
+		  //bottom part 
 		  //  FlowPane flow = new FlowPane();
-		    flow=new FlowPane();
-		    flow.setAlignment(Pos.CENTER);
-		    flow.setPadding(new Insets(5, 0, 5, 0));
-		    flow.setVgap(4);
-		    flow.setHgap(6);
+		  flow=new FlowPane();
+		  flow.setAlignment(Pos.CENTER);
+		  flow.setPadding(new Insets(5, 0, 5, 0));
+		  flow.setVgap(4);
+		  flow.setHgap(6);
 		   
-		    //label with player's name
+		  //label with player's name
 		//    Label userName = new Label("\t"+gm.getPlayer().getName() +"'s Cards: \t");
-		    userName = new Label("\t"+gm.getPlayer().getName() +"'s Cards: \t");
+		  userName = new Label("\t"+gm.getPlayer().getName() +"'s Cards: \t");
 		    
-		    flow.getChildren().add(userName);
-		    for (int i=0; i < gm.getPlayer().getHand().size();i++)
-		    {
-		    	flow.getChildren().add(gm.getPlayer().getHand().get(i).getButton());
-		    	gm.getPlayer().getHand().get(i).getButton().setOnAction(this::processButtonPress);
-		    }
+		  flow.getChildren().add(userName);
+		  for (int i=0; i < gm.getPlayer().getHand().size();i++)
+		  {
+			  flow.getChildren().add(gm.getPlayer().getHand().get(i).getButton());
+			  gm.getPlayer().getHand().get(i).getButton().setOnAction(this::processButtonPress);
+		  }
 		  			
-		  			//top part
-		    top = new TilePane();
-		    top.setAlignment(Pos.CENTER);
-			   top.setPadding(new Insets(5, 0, 5, 0));
-			   top.setVgap(4);
-			   top.setHgap(75);
+		  //top part
+		  top = new TilePane();
+		  top.setAlignment(Pos.CENTER);
+		  top.setPadding(new Insets(5, 0, 5, 0));
+		  top.setVgap(4);
+		  top.setHgap(75);
 			    
-			 //add cp number of cards in hand
-			  next = new Button("Next Player Go"); //TODO add this button when player plays; remove when it's their turn
-			  next.setOnAction(this::computerPlayerTurn); //add turn count in gm
+		  //add cp number of cards in hand
+		  next = new Button("Next Player Go"); 
+		  next.setOnAction(this::computerPlayerTurn); //add turn count in gm
 			   
-			  cp1 = new Label("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards.");
-			  cp2 = new Label("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards.");
-			  cp3 = new Label("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards.");
-			   reset = new Button("RESTART GAME");
-			  reset.setOnAction(this::textField);
+		  cp1 = new Label("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards.");
+		  cp2 = new Label("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards.");
+		  cp3 = new Label("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards.");
+		  reset = new Button("RESTART GAME");
+		  reset.setOnAction(this::textField);
 		
-			  top.getChildren().addAll(cp1,cp2,cp3, reset);
+		  top.getChildren().addAll(cp1,cp2,cp3, reset);
 		 
-			  
+			
+		 // main.setRight(s);
 		  main.setBottom(flow); //shows player's cards
 		  main.setCenter(middle); //create center pane (top card picture and withdraw pile)
 		  main.setTop(top); //shows number of cards in computer player's hands
 		  
-		  Scene mainGameScene = new Scene(main, 800,500); 
+		  Scene mainGameScene = new Scene(main, 1000, 600); 
 		  prim.setScene(mainGameScene);
+	//	  prim.setFullScreen(true);
 		  
 	}
 	//new player play method
@@ -244,7 +260,11 @@ public class newMain extends Application {
 		//	gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
 		//	gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
 			gm.play(-1, gm.getPlayer());
+			flow.getChildren().add(gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton());
+			gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton().setOnAction(this::processButtonPress);
 			gm.play(-1, gm.getPlayer());
+			flow.getChildren().add(gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton());
+			gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton().setOnAction(this::processButtonPress);
 		}
 		if (two>=2)
 		{
@@ -262,7 +282,6 @@ public class newMain extends Application {
 			gm.play(-1, gm.getPlayer());
 		}
 		//END TEST
-		
 		
 		if(gm.getTurn()==0) //WITHDRAW
 		{
@@ -334,14 +353,9 @@ public class newMain extends Application {
 				if (gm.getPlayer().getHand().get(index).getValue().equals("8"))
 				{
 					suitPicker = new GridPane();
-					//TODO update to images
-					clubs = new Button("Clubs");
 					suitPicker.add(clubs, 0, 0);
-					hearts = new Button("Hearts");
 					suitPicker.add(hearts, 1, 0);
-					diamonds = new Button("Diamonds");
 					suitPicker.add(diamonds, 0, 1);
-					spades = new Button("Spades");
 					//sets buttons to change suit method
 					clubs.setOnAction(this::changeSuit);
 					hearts.setOnAction(this::changeSuit);
@@ -375,8 +389,8 @@ public class newMain extends Application {
 					flow.getChildren().clear();
 					flow.getChildren().add(userName);
 					middle.getChildren().clear();
-					middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
-					top.getChildren().add(0, next); //TODO only add once(do not add again if playing card after withdrawing)
+					middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw, s);
+					top.getChildren().add(0, next); 
 				}
 				else
 				{
@@ -393,7 +407,7 @@ public class newMain extends Application {
 			    
 			}
 			
-			//TODO test this one (must win a game)
+			//test this one (must win a game)
 			if (gm.getPlayer().getHand().isEmpty())
 			{
 				win.setBottom(reset); //test
@@ -453,7 +467,15 @@ public class newMain extends Application {
 			{
 				System.out.println("eight");
 				gm.setOSuit(gm.pickSuit(gm.getCompPlayer(0)));
-				s.setText("Suit was changed to " + gm.getOSuit());
+				//tells user which suit is the newest
+				if (gm.getOSuit().equals("C"))
+					s.setText("Suit was changed to Clubs");
+				else if (gm.getOSuit().equals("D"))
+					s.setText("Suit was changed to Diamonds");
+				else if (gm.getOSuit().equals("H"))
+					s.setText("Suit was changed to Hearts");
+				else
+					s.setText("Suit was changed to Spades");
 				gm.play(chosen, gm.getCompPlayer(0));
 				two=0;
 				gm.setTurn(2);
@@ -487,9 +509,19 @@ public class newMain extends Application {
 	//		gm.setTurn(2);
 			System.out.println("test");
 			middle.getChildren().clear();
-			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw, s);
 			cp1.setText("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards."); //label
+		
+			//if a computer player wins, changes screen to LOSE scene
+			if (gm.getCompPlayer(1).getHand().isEmpty())
+			{
+				lose.setBottom(reset); //test
+				Scene loseScene = new Scene(lose,800,500);
+				prim.setScene(loseScene);
+			}
+			
 		}
+		//PLAYER2
 		else if (gm.getTurn()==2)
 		{
 			//TESTING
@@ -560,9 +592,21 @@ public class newMain extends Application {
 		
 			//	gm.setTurn(3);
 			middle.getChildren().clear();
-			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw, s);
 			cp2.setText("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards."); //label
+			
+			//if a computer player wins, changes screen to LOSE scene
+			if (gm.getCompPlayer(1).getHand().isEmpty())
+			{
+				lose.setBottom(reset); //test
+				Scene loseScene = new Scene(lose,800,500);
+				prim.setScene(loseScene);
+			}
+		
 		}
+		
+		
+		//PLAYER 3
 		else if (gm.getTurn()==3)
 		{
 			//TESTING
@@ -634,16 +678,17 @@ public class newMain extends Application {
 			
 			//resets image of top card, and number of cards player2 has
 			middle.getChildren().clear();
-			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw, s);
 			cp3.setText("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards."); //label
-		}
-		
-		//if a computer player wins, changes screen to LOSE scene
-		if (gm.getCompPlayer(0).getHand().isEmpty() || gm.getCompPlayer(1).getHand().isEmpty() || gm.getCompPlayer(2).getHand().isEmpty())
-		{
-			lose.setBottom(reset); //test
-			Scene loseScene = new Scene(lose,800,500);
-			prim.setScene(loseScene);
+			
+			//if a computer player wins, changes screen to LOSE scene
+			if (gm.getCompPlayer(2).getHand().isEmpty())
+			{
+				lose.setBottom(reset); //test
+				Scene loseScene = new Scene(lose,800,500);
+				prim.setScene(loseScene);
+			}
+			
 		}
 	}
 

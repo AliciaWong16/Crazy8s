@@ -53,7 +53,7 @@ public class Deck {
 	//is pile empty (drawPile) : returns true is empty
 	public boolean isDrawPileEmpty()
 	{
-		if (drawPile.isEmpty())
+		if (drawPile.size()==0)
 			return true;
 		else
 			return false;
@@ -85,10 +85,10 @@ public class Deck {
 			//hearts
 			String suit ="H";
 			fullDeck.add(new Card (suit, "A", "file:///C:/Users/Heather/workspace/Assignment/graphics/ace_hearts.png", 1));
-			fullDeck.add(new Card (suit, "2", "file:///C:/Users/Heather/workspace/Assignment/graphics/two_hearts.png", 2));
-			fullDeck.add(new Card (suit, "3", "file:///C:/Users/Heather/workspace/Assignment/graphics/three_hearts.png", 3));
-			fullDeck.add(new Card (suit, "4", "file:///C:/Users/Heather/workspace/Assignment/graphics/four_hearts.png", 4));
-			fullDeck.add(new Card (suit, "5", "file:///C:/Users/Heather/workspace/Assignment/graphics/five_hearts.png",5));
+			fullDeck.add(new Card (suit, "2", "file:///C:/Users/Heather/Documents/School/Crazy%208/cards/2_of_hearts.png", 2));
+			fullDeck.add(new Card (suit, "3", "file:///C:/Users/Heather/Documents/School/Crazy%208/cards/3_of_hearts.png", 3));
+			fullDeck.add(new Card (suit, "4", "file:///C:/Users/Heather/Documents/School/Crazy%208/cards/4_of_hearts.png", 4));
+			fullDeck.add(new Card (suit, "5", "file:///C:/Users/Heather/Documents/School/Crazy%208/cards/5_of_hearts.png",5));
 			fullDeck.add(new Card (suit, "6", "file:///C:/Users/Heather/workspace/Assignment/graphics/six_hearts.png",6));
 			fullDeck.add(new Card (suit, "7", "file:///C:/Users/Heather/workspace/Assignment/graphics/seven_hearts.png",7));
 			fullDeck.add(new Card (suit, "8", "file:///C:/Users/Heather/workspace/Assignment/graphics/eight_hearts.png",8));
