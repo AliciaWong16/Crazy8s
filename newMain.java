@@ -1,6 +1,5 @@
 /*
- * TODO : get rid of nesting if possible - try not to have button events nested under the enter event. How to achieve this? 
- * TODO : play computer player cards. after withdrawing, have option to play card
+ * TODO : after withdrawing, have option to play card. cannot play cards when it's cp player's turn
  */
 
 
@@ -35,15 +34,18 @@ public class newMain extends Application {
 
 	private GameManager gm; //game manager
 	private String name; //player name
-	private Button reset, withdraw, next; //reset to restart game, next to let computer players go
-	private BorderPane main;
-	private Stage prim;
+	private Button reset, withdraw, next, yes, no; //reset to restart game, next to let computer players go
+	private Button hearts, clubs, diamonds, spades; //for changing suits
+	private BorderPane main, win, lose;
+	private Stage prim, playWithdraw, SP;
 	private TextField userTextField;
 	private FlowPane flow;
 	private TilePane middle;
-	private Label userName;
+	private Label userName, cp1, cp2, cp3, s;
 	private TilePane top;
-	
+	private boolean played;
+	private int two; //how many two's have been played in a row
+	private GridPane suitPicker;
 	
     public static void main(String[] args) {
         launch(args);
@@ -52,8 +54,18 @@ public class newMain extends Application {
     @Override
     public void start(Stage primaryStage) 
     {
+    	two=0;
+    	s = new Label("");
+    	win=new BorderPane();
+    	Label winLabel = new Label("YOU WIN!!");
+    	win.setCenter(winLabel);
+    	lose=new BorderPane();
+    	Label loseLabel= new Label("YOU LOSE");
+    	lose.setCenter(loseLabel);
+    	
     	prim = new Stage(); //??
-        primaryStage.setTitle("Crazy Eights");
+    	prim.setTitle("Crazy Eights");
+    //    primaryStage.setTitle("Crazy Eights");
         //creates grid pane (welcome screen)
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -149,6 +161,7 @@ public class newMain extends Application {
 			 name = userTextField.getText(); //gets user input (name)
 		  gm = new GameManager(name); //creates game manager and deals cards
 		  gm.dealCards();
+		  gm.setOSuit(gm.getDeck().getTopDiscard().getSuit());
 		  
 		  //creates new view of screen
 	//	  BorderPane main = new BorderPane();
@@ -203,9 +216,9 @@ public class newMain extends Application {
 			  next = new Button("Next Player Go"); //TODO add this button when player plays; remove when it's their turn
 			  next.setOnAction(this::computerPlayerTurn); //add turn count in gm
 			   
-			  Label cp1 = new Label("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards.");
-			  Label cp2 = new Label("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards.");
-			  Label cp3 = new Label("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards.");
+			  cp1 = new Label("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards.");
+			  cp2 = new Label("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards.");
+			  cp3 = new Label("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards.");
 			   reset = new Button("RESTART GAME");
 			  reset.setOnAction(this::textField);
 		
@@ -220,77 +233,433 @@ public class newMain extends Application {
 		  prim.setScene(mainGameScene);
 		  
 	}
-	//new withdraw method
+	//new player play method
 	public void processButtonPress(ActionEvent e)
 	{
-		if (e.getSource()==withdraw)
+		played=false;
+		
+		//TESTING
+		if (two>=1)
 		{
-			gm.play(-1, false, gm.getPlayer());
-			flow.getChildren().add(gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton());
-			gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton().setOnAction(this::processButtonPress);
+		//	gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
+		//	gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
+			gm.play(-1, gm.getPlayer());
+			gm.play(-1, gm.getPlayer());
 		}
-		else //if playing a card
-		{	
-			int index=-1;
-			for (int i=0; i<gm.getPlayer().getHand().size();i++)
+		if (two>=2)
+		{
+			gm.play(-1, gm.getPlayer());
+			gm.play(-1, gm.getPlayer());
+		}
+		if (two>=3)
+		{
+			gm.play(-1, gm.getPlayer());
+			gm.play(-1, gm.getPlayer());
+		}
+		if (two>=4)
+		{
+			gm.play(-1, gm.getPlayer());
+			gm.play(-1, gm.getPlayer());
+		}
+		//END TEST
+		
+		
+		if(gm.getTurn()==0) //WITHDRAW
+		{
+			top.getChildren().remove(next);
+			//if withdrawing a card
+			if (e.getSource()==withdraw)
 			{
-				if(e.getSource().equals(gm.getPlayer().getHand().get(i).getButton()))
-					index=i;
-			}
+				gm.play(-1, gm.getPlayer());
+				played=true;
+				flow.getChildren().add(gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton());
+				gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1).getButton().setOnAction(this::processButtonPress);
+				//check if card is playable
+				if (gm.isPlayLegal(gm.getPlayer().getHand().get(gm.getPlayer().getHand().size()-1)))
+				{
+					//asks player if they want to play the card
+					yes = new Button("PLAY CARD");
+					no = new Button("DO NOT PLAY CARD");
+					GridPane wpCard = new GridPane();
+					wpCard.add(yes, 1, 0);
+					wpCard.add(no, 0, 0);
+					Scene wp = new Scene(wpCard);
+					playWithdraw = new Stage();
+					playWithdraw.setScene(wp);
+					playWithdraw.setTitle("Play the card you just Withdrew?");
+					playWithdraw.show();
 					
-		//	Button clickedButton = (Button) e.getTarget();
-		//	int index= gm.getPlayer().getButtonIndex(clickedButton);
-			System.out.println(index);
-			if (index!=-1)
+					//actions for buttons to play withdraw'd card
+					yes.setOnAction(this::processButtonPress);
+					no.setOnAction(this::processButtonPress);
+				}
+				else
+				{
+					gm.setTurn(1);
+					top.getChildren().add(0, next);
+				}
+			}//end withdraw
+			//if not playing withdrawn card
+			else if (e.getSource()==no)
 			{
-				gm.play(index, false, gm.getPlayer());
-				flow.getChildren().clear();
-				flow.getChildren().add(userName);
-				middle.getChildren().clear();
-				middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+				two=0;
+				gm.setTurn(1);
+				playWithdraw.close();
+				top.getChildren().add(0, next);
 			}
-			//changes cards
-		    for (int i=0; i < gm.getPlayer().getHand().size();i++)
-		    {
-		    	flow.getChildren().add(gm.getPlayer().getHand().get(i).getButton());
-		    	gm.getPlayer().getHand().get(i).getButton().setOnAction(this::processButtonPress);
-		    }
+			//if playing withdrawn card
+			
+			else  //if playing a card
+			{	
+				int index=-1;
+				//if card was just withdrawn
+				if (e.getSource()==yes)
+				{
+					index = gm.getPlayer().getHand().size()-1;
+					playWithdraw.close();
+					played=false;
+				}
+				else //if playing normal card (not withdrawn)
+				{
+					//finds button
+					for (int i=0; i<gm.getPlayer().getHand().size();i++)
+					{
+						if(e.getSource().equals(gm.getPlayer().getHand().get(i).getButton()))
+							index=i;				
+					}
+				}
+				System.out.println(index);
+				//plays card
+				//if it's an 8
+				if (gm.getPlayer().getHand().get(index).getValue().equals("8"))
+				{
+					suitPicker = new GridPane();
+					//TODO update to images
+					clubs = new Button("Clubs");
+					suitPicker.add(clubs, 0, 0);
+					hearts = new Button("Hearts");
+					suitPicker.add(hearts, 1, 0);
+					diamonds = new Button("Diamonds");
+					suitPicker.add(diamonds, 0, 1);
+					spades = new Button("Spades");
+					//sets buttons to change suit method
+					clubs.setOnAction(this::changeSuit);
+					hearts.setOnAction(this::changeSuit);
+					diamonds.setOnAction(this::changeSuit);
+					spades.setOnAction(this::changeSuit);
+					suitPicker.add(spades, 1, 1);
+					Scene SPicker = new Scene(suitPicker);
+					SP = new Stage();
+					SP.setTitle("Pick a Suit");
+					SP.setScene(SPicker);
+					SP.show();
+				}
+				//TWOS
+				if (gm.getPlayer().getHand().get(index).getValue().equals("2")) //TWO
+					two++;
+				else
+					two=0;
+				//JACK
+				if (gm.getPlayer().getHand().get(index).getValue().equals("J"))
+					gm.setTurn(2);
+				else
+					gm.setTurn(1);
+				
+				//plays card if card is legal
+				if (gm.isPlayLegal(gm.getPlayer().getHand().get(index)))
+				{
+				//	System.out.println("test");
+					gm.setOSuit(gm.getPlayer().getHand().get(index).getSuit()); //updates suit
+					gm.play(index, gm.getPlayer());
+					played=true;
+					flow.getChildren().clear();
+					flow.getChildren().add(userName);
+					middle.getChildren().clear();
+					middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+					top.getChildren().add(0, next); //TODO only add once(do not add again if playing card after withdrawing)
+				}
+				else
+				{
+					played=false;
+					gm.setTurn(0);
+					top.getChildren().remove(next);
+				}
+				//changes cards (adds back in)
+			    for (int i=0; i < gm.getPlayer().getHand().size() && played;i++)
+			    {
+			    	flow.getChildren().add(gm.getPlayer().getHand().get(i).getButton());
+			    	gm.getPlayer().getHand().get(i).getButton().setOnAction(this::processButtonPress);
+			    }
+			    
+			}
+			
+			//TODO test this one (must win a game)
+			if (gm.getPlayer().getHand().isEmpty())
+			{
+				win.setBottom(reset); //test
+				Scene winScene = new Scene(win,800,500);
+				prim.setScene(winScene);
+			}
 		}
-		top.getChildren().add(0,next);
-	}
-
-	public void computerPlayerTurn(ActionEvent e)
-	{
-		int turn = gm.getTurn();
-		if (turn==1)
-		{
-			int chosen= gm.compDecide(gm.getCompPlayer(0),gm.getCompPlayer(1));
-			gm.play(chosen,false,gm.getCompPlayer(0));
-			gm.setTurn(2);
-			middle.getChildren().clear();
-			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
-		}
-		else if (turn==2)
-		{
-			int chosen= gm.compDecide(gm.getCompPlayer(1),gm.getCompPlayer(2));
-			gm.play(chosen,false,gm.getCompPlayer(0));
-			gm.setTurn(3);
-			middle.getChildren().clear();
-			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
-		}
-		else if (turn==3)
-		{
-			int chosen= gm.compDecide(gm.getCompPlayer(2),gm.getPlayer());
-			gm.play(chosen,false,gm.getCompPlayer(0));
-			gm.setTurn(1);
-			top.getChildren().remove(0);
-			middle.getChildren().clear();
-			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
-		}
-		//TODO show when withdrawed card
-
 	}
 	
+	
+	public void computerPlayerTurn(ActionEvent e)
+	{
+		if (gm.getTurn()==0)
+			top.getChildren().remove(next);
+		System.out.println("gmTurn: " +gm.getTurn() +"\nSuit: " + gm.getOSuit());
+		if (gm.getTurn()==1)
+		{
+			//TESTING
+			if (two>=1)
+			{
+			//	gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
+			//	gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
+				gm.play(-1, gm.getCompPlayer(0));
+				gm.play(-1, gm.getCompPlayer(0));
+			}
+			if (two>=2)
+			{
+				gm.play(-1, gm.getCompPlayer(0));
+				gm.play(-1, gm.getCompPlayer(0));
+			}
+			if (two>=3)
+			{
+				gm.play(-1, gm.getCompPlayer(0));
+				gm.play(-1, gm.getCompPlayer(0));
+			}
+			if (two>=4)
+			{
+				gm.play(-1, gm.getCompPlayer(0));
+				gm.play(-1, gm.getCompPlayer(0));
+			}
+			//END TEST
+
+			
+			int chosen= gm.compDecide(gm.getCompPlayer(0),gm.getCompPlayer(1));
+	//		System.out.println("index testing1: " + chosen);
+	//		System.out.println("chosen card: " + gm.getCompPlayer(0).getHand().get(chosen));
+			if (chosen==-1) //TODO add option for cp to play withdrawn card
+			{
+				System.out.println("withdraw");
+				s.setText("");
+				gm.getCompPlayer(0).addToHand(gm.getDeck().withdraw());
+				System.out.println("CP3 withdrew a " + gm.getCompPlayer(0).getHand().get(gm.getCompPlayer(0).getHand().size()-1));
+				gm.setTurn(2);
+				two=0;
+			}
+			else if (gm.getCompPlayer(0).getHand().get(chosen).getValue().equals("8"))
+			{
+				System.out.println("eight");
+				gm.setOSuit(gm.pickSuit(gm.getCompPlayer(0)));
+				s.setText("Suit was changed to " + gm.getOSuit());
+				gm.play(chosen, gm.getCompPlayer(0));
+				two=0;
+				gm.setTurn(2);
+			}
+			else if (gm.getCompPlayer(0).getHand().get(chosen).getValue().equals("2"))
+			{
+				System.out.println("two");
+				s.setText("");
+				gm.play(chosen, gm.getCompPlayer(0));
+				two++;
+				gm.setTurn(2);
+			}
+			else if (gm.getCompPlayer(0).getHand().get(chosen).getValue().equals("J"))
+			{
+				System.out.println("jack");
+				two=0;
+				s.setText("");
+				gm.play(chosen,gm.getCompPlayer(0));
+				gm.setTurn(3);
+			}
+			else
+			{
+				System.out.println("other");
+				two=0;
+				s.setText("");
+				gm.play(chosen, gm.getCompPlayer(0));
+				gm.setTurn(2);
+			}
+			
+
+	//		gm.setTurn(2);
+			System.out.println("test");
+			middle.getChildren().clear();
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+			cp1.setText("CP1 has "+gm.getCompPlayer(0).getHand().size()+" cards."); //label
+		}
+		else if (gm.getTurn()==2)
+		{
+			//TESTING
+			if (two>=1) //got rid of !firstPlay boolean 
+			{
+				gm.getCompPlayer(1).addToHand(gm.getDeck().withdraw());
+				gm.getCompPlayer(1).addToHand(gm.getDeck().withdraw());
+			//	gm.play(-1, gm.getCompPlayer(1));
+			//	gm.play(-1, gm.getCompPlayer(1));
+			}
+			if (two>=2)
+			{
+				gm.play(-1, gm.getCompPlayer(1));
+				gm.play(-1, gm.getCompPlayer(1));
+			}
+			if (two>=3)
+			{
+				gm.play(-1, gm.getCompPlayer(1));
+				gm.play(-1, gm.getCompPlayer(1));
+			}
+			if (two>=4)
+			{
+				gm.play(-1, gm.getCompPlayer(1));
+				gm.play(-1, gm.getCompPlayer(1));
+			}
+			//END TEST
+			
+			int chosen= gm.compDecide(gm.getCompPlayer(1),gm.getCompPlayer(2));
+			System.out.println("index testing2: " + chosen);
+			if (chosen==-1) //TODO add option for cp to play withdrawn card
+			{
+				s.setText("");
+				gm.getCompPlayer(1).addToHand(gm.getDeck().withdraw());
+				System.out.println("CP2 withdrew a " + gm.getCompPlayer(1).getHand().get(gm.getCompPlayer(1).getHand().size()-1));
+				gm.setTurn(3);
+				two=0;
+			}
+			else if (gm.getCompPlayer(1).getHand().get(chosen).getValue().equals("8"))
+			{
+				gm.setOSuit(gm.pickSuit(gm.getCompPlayer(1)));
+				s.setText("Suit was changed to " + gm.getOSuit());
+				gm.play(chosen,gm.getCompPlayer(1));
+				two=0;
+				gm.setTurn(3);
+			}
+			else if (gm.getCompPlayer(1).getHand().get(chosen).getValue().equals("2"))
+			{
+				s.setText("");
+				gm.play(chosen,gm.getCompPlayer(1));
+				two++;
+				gm.setTurn(3);
+			}
+			else if (gm.getCompPlayer(1).getHand().get(chosen).getValue().equals("J"))
+			{
+				two=0;
+				s.setText("");
+				gm.play(chosen,gm.getCompPlayer(1));
+				gm.setTurn(0);
+				top.getChildren().remove(next);
+			}
+			else
+			{
+				two=0;
+				s.setText("");
+				gm.play(chosen, gm.getCompPlayer(1));
+				gm.setTurn(3);
+			}
+		
+			//	gm.setTurn(3);
+			middle.getChildren().clear();
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+			cp2.setText("CP2 has "+gm.getCompPlayer(1).getHand().size()+" cards."); //label
+		}
+		else if (gm.getTurn()==3)
+		{
+			//TESTING
+			if (two>=1)
+			{
+				gm.play(-1, gm.getCompPlayer(2));
+				gm.play(-1, gm.getCompPlayer(2));
+			}
+			if (two>=2)
+			{
+				gm.play(-1, gm.getCompPlayer(2));
+				gm.play(-1, gm.getCompPlayer(2));
+			}
+			if (two>=3)
+			{
+				gm.play(-1, gm.getCompPlayer(2));
+				gm.play(-1, gm.getCompPlayer(2));
+			}
+			if (two>=4)
+			{
+				gm.play(-1, gm.getCompPlayer(2));
+				gm.play(-1, gm.getCompPlayer(2));
+			}
+			//END TEST
+			
+			//PLAYER 3
+			int chosen= gm.compDecide(gm.getCompPlayer(2),gm.getPlayer());
+			System.out.println("index testing3: " + chosen);
+			if (chosen==-1) //TODO add option for cp to play withdrawn card
+			{
+				s.setText("");
+				gm.getCompPlayer(2).addToHand(gm.getDeck().withdraw());
+				System.out.println("CP3 withdrew a " + gm.getCompPlayer(2).getHand().get(gm.getCompPlayer(2).getHand().size()-1));
+				gm.setTurn(0);
+				two=0;
+			}
+			else if (gm.getCompPlayer(2).getHand().get(chosen).getValue().equals("8"))
+			{
+				gm.setOSuit(gm.pickSuit(gm.getCompPlayer(2)));
+				s.setText("Suit was changed to " + gm.getOSuit());
+				gm.play(chosen,gm.getCompPlayer(2));
+				two=0;
+				gm.setTurn(0);
+				top.getChildren().remove(next);
+			}
+			else if (gm.getCompPlayer(2).getHand().get(chosen).getValue().equals("2"))
+			{
+				s.setText("");
+				gm.play(chosen,gm.getCompPlayer(2));
+				two++;
+				gm.setTurn(0);
+				top.getChildren().remove(next);
+			}
+			else if (gm.getCompPlayer(2).getHand().get(chosen).getValue().equals("J"))
+			{
+				two=0;
+				s.setText("");
+				gm.play(chosen,gm.getCompPlayer(2));
+				gm.setTurn(1);
+			}
+			else
+			{
+				gm.setTurn(0);
+				two=0;
+				s.setText("");
+				gm.play(chosen, gm.getCompPlayer(2));
+				top.getChildren().remove(next);
+			}
+			
+			//resets image of top card, and number of cards player2 has
+			middle.getChildren().clear();
+			middle.getChildren().addAll(gm.getDeck().getImageTop(), withdraw);
+			cp3.setText("CP3 has "+gm.getCompPlayer(2).getHand().size()+" cards."); //label
+		}
+		
+		//if a computer player wins, changes screen to LOSE scene
+		if (gm.getCompPlayer(0).getHand().isEmpty() || gm.getCompPlayer(1).getHand().isEmpty() || gm.getCompPlayer(2).getHand().isEmpty())
+		{
+			lose.setBottom(reset); //test
+			Scene loseScene = new Scene(lose,800,500);
+			prim.setScene(loseScene);
+		}
+	}
+
+	public void changeSuit(ActionEvent e)
+	{
+		if (e.getSource()==hearts)
+			gm.setOSuit("H");
+		else if (e.getSource()==clubs)
+			gm.setOSuit("C");
+		else if (e.getSource()==diamonds)
+			gm.setOSuit("D");
+		else if (e.getSource()==spades)
+			gm.setOSuit("S");
+		
+		SP.close(); //closes suit picker stage
+	}
 }
 
 
