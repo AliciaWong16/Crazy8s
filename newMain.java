@@ -210,9 +210,26 @@ public class newMain extends Application {
 		   
 		  //label with player's name
 		//    Label userName = new Label("\t"+gm.getPlayer().getName() +"'s Cards: \t");
+		  Image hand = new Image("file:///C:/Users/Megan/OneDrive/cards/hand.png");
+                  ImageView handView = new ImageView(hand);
+		  handView.setFitWidth(50);
+                  handView.setPreserveRatio(true);
+                    
+                  ImageView handView0 = new ImageView(hand);
+                  handView0.setFitWidth(50);
+                  handView0.setPreserveRatio(true);
+                         
+                  ImageView handView1 = new ImageView(hand);
+                  handView1.setFitWidth(50);
+                  handView1.setPreserveRatio(true);
+                    
+                  ImageView handView2 = new ImageView(hand);
+                  handView2.setFitWidth(50);
+                  handView2.setPreserveRatio(true);
+		
 		  userName = new Label("\t"+gm.getPlayer().getName() +"'s Cards: \t");
 		    
-		  flow.getChildren().add(userName);
+		  flow.getChildren().addAll(handView2,userName);
 		  for (int i=0; i < gm.getPlayer().getHand().size();i++)
 		  {
 			  flow.getChildren().add(gm.getPlayer().getHand().get(i).getButton());
@@ -236,7 +253,7 @@ public class newMain extends Application {
 		  reset = new Button("RESTART GAME");
 		  reset.setOnAction(this::textField);
 		
-		  top.getChildren().addAll(cp1,cp2,cp3, reset);
+		  top.getChildren().addAll(handView,cp1,handView0,cp2,handView1,cp3, reset);
 		 
 			
 		 // main.setRight(s);
