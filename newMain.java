@@ -280,13 +280,36 @@ public class newMain extends Application {
 				{
 					suitPicker = new GridPane();
 					//TODO update to images
+					Image clubsIcon = new Image("");
+                                        ImageView clubsIconView = new ImageView(clubsIcon);
+                                        clubsIconView.setFitWidth(20);
+                                        clubsIconView.setPreserveRatio(true);
 					Button clubs = new Button("Clubs");
+                                        clubs.setGraphic(clubsIconView);
 					suitPicker.add(clubs, 0, 0);
+                                        
+                                        Image heartsIcon = new Image("");
+                                        ImageView heartsIconView = new ImageView(heartsIcon);
+                                        heartsIconView.setFitWidth(20);
+                                        heartsIconView.setPreserveRatio(true);
 					Button hearts = new Button("Hearts");
+                                        hearts.setGraphic(heartsIconView);
 					suitPicker.add(hearts, 1, 0);
+                                        
+                                        Image diamondsIcon = new Image("");
+                                        ImageView diamondsIconView = new ImageView(diamondsIcon);
+                                        diamondsIconView.setFitWidth(20);
+                                        diamondsIconView.setPreserveRatio(true);
 					Button diamonds = new Button("Diamonds");
+                                        diamonds.setGraphic(diamondsIconView);
 					suitPicker.add(diamonds, 0, 1);
+                                        
+                                        Image spadesIcon = new Image("");
+                                        ImageView spadesIconView = new ImageView(spadesIcon);
+                                        spadesIconView.setFitWidth(20);
+                                        spadesIconView.setPreserveRatio(true);
 					Button spades = new Button("Spades");
+                                        spades.setGraphic(spadesIconView);
 					suitPicker.add(spades, 1, 1);
 					Scene SPicker = new Scene(suitPicker);
 					Stage SP = new Stage();
