@@ -102,7 +102,7 @@ public class newMain extends Application {
         userTextField = new TextField();
         userTextField.setOnAction(this::textField);
         grid.add(userTextField, 1, 1);
-        grid.setStyle("-fx-background-color:pink");
+     //   grid.setStyle("-fx-background-color:pink");
         
         //sets primary scene to starting screen
         Scene scene = new Scene(grid, 600, 400);
@@ -132,18 +132,19 @@ public class newMain extends Application {
                 ruleStage.setTitle("How to Play");
                 GridPane rulePane = new GridPane();
                 Text txt = new Text("Rules"
-                        + "\n\n\tTo begin, each player starts with 8 cards, and the goal is to be the first player to play all of the cards in their hand"
-                        + "\n\tWhen It's your turn you must play a card from your hand that is either the same suit or value as the current top card"
-                        + "\n\tIf you can't play any of your cards you must withdraw from the pile"
-                        + "\n\tIf the withdrawn card is playable you can play it immediately"
-                        + "\n\n\tThere are 3 kinds of special cards in the game"
+                        + "\n\n\tTo begin, each player starts with 8 cards, and the goal is to be the first player to play all of the cards in their hand."
+                        + "\n\tWhen It's your turn, you must play a card from your hand that is either the same suit or value as the current top card."
+                        + "\n\tIf you can't play any of your cards you must withdraw from the pile."
+                        + "\n\tIf the withdrawn card is playable you can play it immediately."
+                        + "\n\n\tThere are 3 kinds of special cards in the game:\n"
                         + "\n\tIf a card with the value 2 is played the next player must pick up two cards before playing"
-                        + "\n\tThis player can also play a 2 and meaning that the next player needs to pick up 4 cards"
-                        + "\n\tThis continues up to 4 turns"
-                        + "\n\n\tIf a Jack is played the next player's turn is skipped"
+                        + "\n\tThis player can also play a 2, meaning that the next player needs to pick up 4 cards."
+                        + "\n\tThis continues up to 4 turns (max pick up from 2s is 8 cards)."
+                        + "\n\n\tIf a Jack is played the next player's turn is skipped."
                         + "\n\n\tAn 8 can be played at any time in the game no matter what the top card is in the pile."
-                        + "\n\tThe player who plays an eight then gets to decide what suit should be played next"
-                        + "\n\n\tThe player who empties their hand is declared the winner!");
+                        + "\n\tThe player who plays an eight then gets to decide what suit should be played next."
+                        + "\n\n\tThe player who empties their hand is declared the winner!"
+                        +"\n\n\tWhen it is not your turn, press the \"Next Player Go\" button until it is your turn again.");
                 txt.setFont(Font.font("Tahoma", FontWeight.LIGHT, 11));
                 rulePane.getChildren().add(txt);
                 
@@ -289,13 +290,16 @@ public class newMain extends Application {
 					//asks player if they want to play the card
 					yes = new Button("PLAY CARD");
 					no = new Button("DO NOT PLAY CARD");
-					GridPane wpCard = new GridPane();
-					wpCard.add(yes, 1, 0);
-					wpCard.add(no, 0, 0);
-					Scene wp = new Scene(wpCard);
+					yes.setPadding(new Insets(13));
+					no.setPadding(new Insets(13));
+					BorderPane wpCard = new BorderPane();
+					wpCard.setTop(yes);
+					wpCard.setBottom(no);
+					wpCard.setPadding(new Insets(10));
+					Scene wp = new Scene(wpCard,155,110);
 					playWithdraw = new Stage();
 					playWithdraw.setScene(wp);
-					playWithdraw.setTitle("Play the card you just Withdrew?");
+					playWithdraw.setTitle("Play card?");
 					playWithdraw.show();
 					
 					//actions for buttons to play withdraw'd card
@@ -431,9 +435,8 @@ public class newMain extends Application {
 				gm.play(-1, gm.getCompPlayer(0));
 				gm.play(-1, gm.getCompPlayer(0));
 			}
-			//END TEST
+			//END 2s
 
-			
 			int chosen= gm.compDecide(gm.getCompPlayer(0),gm.getCompPlayer(1));
 			if (chosen==-1)
 			{
